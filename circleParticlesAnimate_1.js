@@ -39,8 +39,8 @@ const sketch = () => {
 
     animate() {
       this.draw();
-      this.speed.x *= lerp(0.65, 1.45, Math.random());
-      this.speed.y *= lerp(0.65, 1.45, Math.random());
+      this.speed.x *= random.range(0.65, 1.45);
+      this.speed.y *= random.range(0.65, 1.45);
       this.x += this.speed.x;
       this.y += this.speed.y;
       this.alpha -= 0.008;
