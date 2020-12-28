@@ -28,7 +28,7 @@ const sketch = () => {
       this.waveChange = 1
     }
 
-    draw() {
+    render() {
       context.save();
       context.beginPath();
       context.fillStyle = this.color;
@@ -152,9 +152,9 @@ const sketch = () => {
     
     dots.forEach((circle) => {
       circle.animate()
-      circle.draw()
+      // circle.render()
     });
-    new DrawCircle(mouse.x, mouse.y, 200, 'rgba(255, 0, 0, .05').draw();
+    new DrawCircle(mouse.x, mouse.y, 200, 'rgba(255, 0, 0, .05').render();
 
   };
 };
