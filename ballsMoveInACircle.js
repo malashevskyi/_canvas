@@ -31,7 +31,7 @@ const sketch = () => {
     }
     
     update(x, y) {
-      this.x = x;
+      this.x = x + y;
       this.y = y;
       this.draw()
     }
