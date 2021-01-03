@@ -9,7 +9,7 @@ const settings = {
 const sketch = () => {
   const particles = [];
   const mouse = { x: null, y: null };
-  const count = 80;
+  const count = 50;
   let canvasRectAlpha = 0.2;
   let context;
   let width;
@@ -49,7 +49,7 @@ const sketch = () => {
   }
 
   function addParticles() {
-    setTimeout(addParticles, 400)
+    setTimeout(addParticles, 70)
 
     const power = 7;
     const angleIncrement = (Math.PI * 2) / count;
