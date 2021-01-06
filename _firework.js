@@ -4,8 +4,11 @@ const { lerp } = require('canvas-sketch-util/math');
 const palettes = require('nice-color-palettes');
 
 const settings = {
+  dimensions: [580, 240],
+  // fps: 24,
+  // duration: 4,
   animate: true,
-};
+}
 
 const sketch = () => {
   const particles = [];
@@ -52,6 +55,8 @@ const sketch = () => {
   function addParticles(e) {
     mouse.x = e.clientX;
     mouse.y = e.clientY;
+    mouse.x = width * Math.random();
+    mouse.y = height * Math.random();
 
     clearInterval(intervalAlpha);
     let startClearRect = 0;
@@ -67,7 +72,7 @@ const sketch = () => {
       }
     });
 
-    const power = 40;
+    const power = 20;
     const angleIncrement = (Math.PI * 2) / count;
 
     const palette = random.pick(palettes).slice(0, 3);
@@ -76,7 +81,7 @@ const sketch = () => {
         new Particle(
           mouse.x,
           mouse.y,
-          3,
+          1,
           random.pick(palette), {
           x: Math.cos(angleIncrement * i) * Math.random() * power,
           y: Math.sin(angleIncrement * i) * Math.random() * power,
