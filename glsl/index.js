@@ -1,5 +1,6 @@
 const createShader = require('canvas-sketch-util/shader');
-import { frag } from './rgbMix';
+// import { frag } from './rgbMix';
+import { frag } from './axes';
 
 const canvasSketch = require('canvas-sketch');
 
