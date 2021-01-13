@@ -38,11 +38,10 @@ const sketch = ({ context, time, width, height }) => {
 
   // Setup a geometry
   let geometry = new THREE.PlaneGeometry(2, 2);
-  // const geometry = new THREE.BoxGeometry(1, 1, 1);
 
   const loader = new THREE.TextureLoader();
   const texture = loader.load(
-    './../../images/earth.jpg',
+    './../../images/pexels-louise.jpg',
     fitTexture
   );
 
@@ -77,8 +76,8 @@ const sketch = ({ context, time, width, height }) => {
       1
     );
 
-    const aspectY = (height * d) / texture.image.height;
-    const aspectX = (width * d) / texture.image.width;
+    const aspectY = height * d / texture.image.height;
+    const aspectX = width * d / texture.image.width;
 
     geometry.scale(
       texture.image.width / d / width,
@@ -106,11 +105,7 @@ const sketch = ({ context, time, width, height }) => {
     // Update & render your scene here
     render(props) {
       const { canvasHeight, canvasWidth } = props;
-
-      // if (texture.image) {
-      //   fitTexture()
-      // }
-      // console.log(props);
+      
       material.uniforms.u_resolution.value.x = canvasWidth;
       material.uniforms.u_resolution.value.y = canvasHeight;
       material.uniforms.u_size.value = new THREE.Vector2(
