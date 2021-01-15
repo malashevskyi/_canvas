@@ -1,5 +1,5 @@
 const createShader = require('canvas-sketch-util/shader');
-import frag from './fs.glsl';
+import frag from './fs.frag';
 
 const canvasSketch = require('canvas-sketch');
 
