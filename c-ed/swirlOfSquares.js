@@ -1,24 +1,14 @@
 const canvasSketch = require('canvas-sketch');
-const random = require('canvas-sketch-util/random');
-const palettes = require('nice-color-palettes');
 
 const settings = {
   animate: true,
 };
 
-const sketch = () => {
+const sketch = ({ context, width, height }) => {
   const particles = [];
-  const mouse = { x: null, y: null };
+  const mouse = { x: 0, y: 0 };
   const count = 200;
-  let context;
-  let width;
-  let height;
-
-  addEventListener('mousemove', (e) => {
-    mouse.x = e.clientX;
-    mouse.y = e.clientY;
-  });
-
+  let tick = 0;
   class Particle {
     constructor(x, y, color, speed) {
       this.x = x;
@@ -49,30 +39,36 @@ const sketch = () => {
 
     const angleIncrement = (Math.PI * 2) / count;
 
-    const palette = random.pick(palettes).slice(0, 1);
     for (let i = 0; i < count; i++) {
-      let inc = i % (count / 22);
+      let inc = i % (count / 42);
 
       particles.push(
-        new Particle(mouse.x, mouse.y, random.pick(palette), {
-          x: Math.cos(angleIncrement * i) * inc,
-          y: Math.sin(angleIncrement * i) * inc,
-        })
+        new Particle(
+          mouse.x,
+          mouse.y,
+          `hsl(${tick * 10}, 50%, 50%)`,
+          {
+            x: Math.cos(angleIncrement * i) * inc,
+            y: Math.sin(angleIncrement * i) * inc,
+          }
+        )
       );
     }
   }
+  
+  addParticles();
 
   return (props) => {
-    if (!context) {
-      ({ context } = props);
-      addParticles();
-    }
-
     ({ width, height } = props);
+    tick += 0.04;
 
     context.fillStyle = `rgba(10, 10, 10, 1)`;
     context.fillRect(0, 0, width, height);
 
+    context.save()
+    context.translate(width / 2, height / 2);
+    context.rotate(-tick)
+    
     particles.forEach((particle, i) => {
       if (particle.alpha > 0) {
         particle.animate();
@@ -80,6 +76,7 @@ const sketch = () => {
         particles.splice(i, 1);
       }
     });
+    context.restore()
   };
 };
 
