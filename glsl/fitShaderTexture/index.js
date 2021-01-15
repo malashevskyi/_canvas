@@ -4,7 +4,7 @@ global.THREE = require('three');
 const canvasSketch = require('canvas-sketch');
 
 import fragmentShader from './fs.frag';
-import vertexShader from './vs.frag';
+import vertexShader from './vs.vert';
 
 const settings = {
   // Make the loop animated
