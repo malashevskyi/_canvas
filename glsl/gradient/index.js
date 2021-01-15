@@ -2,7 +2,7 @@
 import createShader from 'canvas-sketch-util/shader';
 import canvasSketch from 'canvas-sketch';
 
-import { frag } from './fs';
+import frag from './fs.frag';
 
 const settings = {
   animate: true,
