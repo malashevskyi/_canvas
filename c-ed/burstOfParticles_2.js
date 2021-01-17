@@ -7,24 +7,21 @@ const settings = {
   animate: true,
 };
 
-const sketch = () => {
+const sketch = ({ context, width, height}) => {
   const particles = [];
   const mouse = { x: null, y: null };
   const count = 400;
   let canvasRectAlpha = 1;
   let intervalAlpha;
-  let context;
-  let width;
-  let height;
   const gravity = 0.1;
 
   class Particle {
-    constructor(x, y, radius, color, velocity) {
+    constructor(x, y, radius, color, speed) {
       this.x = x;
       this.y = y;
       this.radius = radius;
       this.color = color;
-      this.velocity = velocity;
+      this.speed = speed;
       this.alpha = 1;
     }
 
@@ -38,13 +35,13 @@ const sketch = () => {
       context.restore();
     }
 
-    animate() {
+    render() {
       this.draw();
-      this.velocity.x *= lerp(0.65, 1.25, Math.random());
-      this.velocity.y *= lerp(0.85, 1.25, Math.random());
-      this.velocity.y += gravity;
-      this.x += this.velocity.x;
-      this.y += this.velocity.y;
+      this.speed.x *= lerp(0.65, 1.25, Math.random());
+      this.speed.y *= lerp(0.85, 1.25, Math.random());
+      this.speed.y += gravity;
+      this.x += this.speed.x;
+      this.y += this.speed.y;
       this.alpha -= 0.01;
     }
   }
@@ -84,17 +81,17 @@ const sketch = () => {
     }
   }
 
+  context.canvas.addEventListener('click', addParticles);
+
   return (props) => {
-    if (!context) {
-      ({ context, width, height } = props);
-      context.canvas.addEventListener('click', addParticles);
-    }
+    ({ context, width, height } = props);
+
     context.fillStyle = `rgba(10, 10, 10, ${canvasRectAlpha})`;
     context.fillRect(0, 0, width, height);
 
     particles.forEach((particle, i) => {
       if (particle.alpha > 0) {
-        particle.animate();
+        particle.render();
       } else {
         particles.splice(i, 1);
       }
