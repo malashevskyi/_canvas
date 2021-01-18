@@ -1,5 +1,6 @@
 import canvasSketch from 'canvas-sketch';
 import * as d3 from 'd3';
+import random from 'canvas-sketch-util/random';
 
 const settings = {
   // For SVG to resize easily we will have to set this to true
@@ -8,66 +9,54 @@ const settings = {
   parent: false,
   dimensions: [512, 512],
 };
-// https://www.youtube.com/watch?v=TOJ9yjvlapY
-const sketch = ({ canvas, width, height }) => {
-  // Create some random circle data
-  const DUMMY_DATA = [
-    { id: 'd1', value: 10, region: 'USA' },
-    { id: 'd1', value: 9, region: 'India' },
-    { id: 'd1', value: 7, region: 'China' },
-    { id: 'd1', value: 14, region: 'Germany' },
-  ];
+
+const sketch = ({ width, height }) => {
+  random.setSeed(1);
+  
+  const data = [];
+  for (let i = 0; i < 10; i++) {
+    data.push({ id: i, value: 5 + 10 * random.value()})
+  }
 
   d3.select('head').append('style').text(/* css */ `
-    .container {
-      border: 1px solid red;
+    svg {
+      border: 1px solid #ccc;
       box-sizing: border-box;
     }
   `);
 
   const xScale = d3
     .scaleBand()
-    .domain(DUMMY_DATA.map((dataPoint) => dataPoint.region))
-    .rangeRound([0, width])
+    .domain(data.map((d) => d.id))
+    .range([0, width])
     .padding(0.01);
   const yScale = d3
     .scaleLinear()
     .domain([0, 15])
     .range([height, 0]);
 
-  const svg = d3
-    .select('body')
-    .append('svg')
-    .classed('container', true);
+  const svg = d3.select('body').append('svg');
 
   svg
     .selectAll('.bar')
-    .data(DUMMY_DATA)
+    .data(data)
     .enter()
     .append('rect')
     .classed('bar', true)
     .attr('width', xScale.bandwidth())
-    .attr('height', (data) => {
-      return height - yScale(data.value);
+    .attr('height', (d) => {
+      return height - yScale(d.value);
     })
-    .attr('x', (data) => xScale(data.region))
-    .attr('y', (data) => yScale(data.value));
+    .attr('x', (data) => xScale(data.id))
+    .attr('y', (data) => yScale(data.value))
+    .attr('fill', 'red');
 
-  return ({
-    exporting,
-    width,
-    height,
-    styleWidth,
-    styleHeight,
-  }) => {
-    // First update the sizes to our viewport
-
+  return ({ exporting, width, height }) => {
     svg
-      .attr('width', styleWidth)
-      .attr('height', styleHeight)
+      .attr('width', width)
+      .attr('height', height)
       .attr('viewBox', `0 0 ${width} ${height}`);
 
-    // If exporting, serialize SVG to Blob
     if (exporting) {
       // Clone the SVG element and resize to output dimensions
       const copy = d3
