@@ -24,20 +24,19 @@ const sketch = ({ width, height }) => {
     .attr('height', height)
     .classed('svg', true);
 
-  const radius = 100;
-  const points = [
-    [0, radius],
-    [Math.PI * 0.25, radius + radius * Math.random()],
-    [Math.PI * 0.5, radius + radius * Math.random()],
-    [Math.PI * 0.75, radius + radius * Math.random()],
-    [Math.PI, radius + radius * Math.random()],
-    [Math.PI * 1.25, radius + radius * Math.random()],
-    [Math.PI * 1.5, radius + radius * Math.random()],
-    [Math.PI * 1.75, radius + radius * Math.random()],
-    [Math.PI * 2.01, radius],
-  ];
+  const segments = 10;
+  const radius = 150;
+
+  const angleScale = d3
+    .scaleLinear()
+    .domain([1, segments])
+    .range([0, Math.PI * 2 + 0.02])
+
   // clockwise from 12 o’clock
-  const radialLineGenerator = d3.radialLine();
+  const radialLineGenerator = d3
+    .radialLine()
+    .angle((d, i) => angleScale(i))
+    .radius(radius)
 
   const g = svg
     .append('g')
@@ -47,7 +46,7 @@ const sketch = ({ width, height }) => {
     );
 
   g.append('path')
-    .attr('d', radialLineGenerator(points))
+    .attr('d', radialLineGenerator(Array(segments)))
     .attr('stroke-width', 10)
     .attr('stroke', 'black');
 
