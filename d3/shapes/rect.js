@@ -24,16 +24,46 @@ const sketch = ({ width, height }) => {
     .attr('height', height)
     .classed('svg', true);
 
-  for (let i = 0; i < 5; i++) {
-    for (let j = 0; j < 5; j++) {
-      svg
-        .append('rect')
-        .attr('x', (width / 5) * i)
-        .attr('y', (height / 5) * j)
-        .attr('width', 100)
-        .attr('height', 100);
-    }
-  }
+  const data = Array(10).fill('');
+
+  const xScale = d3
+    .scaleLinear()
+    .domain([0, data.length])
+    .range([0, width]);
+  const yScale = d3
+    .scaleLinear()
+    .domain([0, data.length])
+    .range([0, height]);
+
+  const wScale = d3
+    .scaleBand()
+    .domain(data.map((el, i) => i))
+    .range([0, width])
+    .padding(0.03);
+  const hScale = d3
+    .scaleBand()
+    .domain(data.map((el, i) => i))
+    .range([0, height])
+    .padding(0.03);
+
+  svg
+    .selectAll('g')
+    .data(data)
+    .enter()
+    .append('g')
+    .attr(
+      'transform',
+      (d, i) => `translate(0, ${yScale(i)})`
+    )
+    .selectAll('rect')
+    .data(data)
+    .enter()
+    .append('rect')
+    .attr('x', (d, i) => xScale(i))
+    .attr('y', 0)
+    .attr('width', wScale.bandwidth())
+    .attr('height', hScale.bandwidth())
+    .attr('fill', 'red');
 
   return ({ exporting, width, height }) => {
     svg
@@ -41,15 +71,12 @@ const sketch = ({ width, height }) => {
       .attr('height', height)
       .attr('viewBox', `0 0 ${width} ${height}`);
 
-    // If exporting, serialize SVG to Blob
     if (exporting) {
-      // Clone the SVG element and resize to output dimensions
       const copy = d3
         .select(svg.node().cloneNode(true))
         .attr('width', width)
         .attr('height', height);
 
-      // Make a blob out of the SVG and return that
       const data = svgToBlob(copy.node());
       return { data, extension: '.svg' };
     }
