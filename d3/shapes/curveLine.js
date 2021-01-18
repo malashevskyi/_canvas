@@ -1,4 +1,4 @@
-const canvasSketch = require('canvas-sketch');
+import canvasSketch from 'canvas-sketch';
 import * as d3 from 'd3';
 import { lerp } from 'canvas-sketch-util/math';
 import random from 'canvas-sketch-util/random';
