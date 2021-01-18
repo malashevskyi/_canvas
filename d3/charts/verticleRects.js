@@ -58,13 +58,11 @@ const sketch = ({ width, height }) => {
       .attr('viewBox', `0 0 ${width} ${height}`);
 
     if (exporting) {
-      // Clone the SVG element and resize to output dimensions
       const copy = d3
         .select(svg.node().cloneNode(true))
         .attr('width', width)
         .attr('height', height);
 
-      // Make a blob out of the SVG and return that
       const data = svgToBlob(copy.node());
       return { data, extension: '.svg' };
     }

@@ -37,7 +37,7 @@ const sketch = ({ context, width, height }) => {
       context.restore();
     }
 
-    animate() {
+    render() {
       this.draw();
       this.x += this.speed.x;
       this.y += this.speed.y;
@@ -72,13 +72,13 @@ const sketch = ({ context, width, height }) => {
 
   return (props) => {
     ({ width, height } = props);
-    
+
     context.fillStyle = `rgba(10, 10, 10, ${canvasRectAlpha})`;
     context.fillRect(0, 0, width, height);
 
     particles.forEach((particle, i) => {
       if (particle.alpha > 0) {
-        particle.animate();
+        particle.render();
       } else {
         particles.splice(i, 1);
       }
