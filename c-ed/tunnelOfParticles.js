@@ -6,14 +6,11 @@ const settings = {
   animate: true,
 };
 
-const sketch = () => {
+const sketch = ({ context, width, height }) => {
   const particles = [];
   const mouse = { x: null, y: null };
   const count = 50;
   let canvasRectAlpha = 0.2;
-  let context;
-  let width;
-  let height
 
   addEventListener('mousemove', (e) => {
     mouse.x = e.clientX;
@@ -71,11 +68,11 @@ const sketch = () => {
     }
   }
 
+  addParticles();
+
   return (props) => {
-    if (!context) {
-      ({ context, width, height } = props);
-      addParticles();
-    }
+    ({ width, height } = props);
+    
     context.fillStyle = `rgba(10, 10, 10, ${canvasRectAlpha})`;
     context.fillRect(0, 0, width, height);
 
