@@ -24,22 +24,18 @@ const sketch = ({ width, height }) => {
     .attr('height', height)
     .classed('svg', true);
 
+  const segments = 20; 
+
+  const angleScale = d3
+    .scaleLinear()
+    .domain([1, segments])
+    .range([0, Math.PI * 2])
+
   const radialAreaGenerator = d3
     .radialArea()
-    .angle((d) => d.angle)
-    .innerRadius((d) => d.r0)
-    .outerRadius((d) => d.r1);
-
-  const points = [];
-
-  const count = 20;
-  for (let i = 0; i <= count; i++) {
-    points.push({
-      angle: ((Math.PI * 2) / count) * i,
-      r0: 90,
-      r1: 170,
-    });
-  }
+    .angle((d, i) => angleScale(i))
+    .innerRadius(90)
+    .outerRadius(170);
 
   const g = svg
     .append('g')
@@ -49,7 +45,8 @@ const sketch = ({ width, height }) => {
     );
   g
     .append('path')
-    .attr('d', radialAreaGenerator(points));
+    .attr('fill', 'red')
+    .attr('d', radialAreaGenerator(Array(segments)));
 
   return ({ exporting, width, height }) => {
     svg
