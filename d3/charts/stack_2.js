@@ -8,14 +8,12 @@ const settings = {
   scaleToView: true,
   // Do not append <canvas> element
   parent: false,
-  // dimensions: [1012, 512],
 };
 
 const sketch = ({ width, height }) => {
   random.setSeed(1);
 
   const palette = random.pick(palettes);
-  const colors = [palette[0], palette[1], palette[2]];
 
   d3.select('head').append('style').text(/* css */ `
     .svg {
@@ -43,31 +41,25 @@ const sketch = ({ width, height }) => {
     [80, 230, 105],
     [120, 240, 105],
   ];
-  const maxSum = Math.max(
-    ...data.map((arr) =>
-      arr.reduce((sum, val) => sum + val)
-    )
-  );
 
   const stack = d3.stack().keys([0, 1, 2]);
-  // const stack = d3.stack().keys([0, 1, 2]).order(d3.stackOrderInsideOut);
-  // const stack = d3.stack().keys([0, 1, 2]).order(d3.stackOrderReverse);
-  // const stack = d3.stack().keys([0, 1, 2]).order(d3.stackOrderDescending);
-  // const stack = d3.stack().keys([0, 1, 2]).order(d3.stackOrderAscending);
+  // .order(d3.stackOrderInsideOut);
+  // .order(d3.stackOrderReverse);
+  // .order(d3.stackOrderDescending);
+  // .order(d3.stackOrderAscending);
 
   const yScale = d3
     .scaleLinear()
     .domain([0, 600])
     .range([650, 0]);
 
-  const areaGenerator = () =>
-    d3
-      .area()
-      .x((d, i) => {
-        return (width / (data.length - 1)) * i;
-      })
-      .y0((d) => yScale(d[0]))
-      .y1((d) => yScale(d[1]));
+  const areaGenerator = d3
+    .area()
+    .x((d, i) => {
+      return (width / (data.length - 1)) * i;
+    })
+    .y0((d) => yScale(d[0]))
+    .y1((d) => yScale(d[1]));
 
   const g = svg.append('g');
 
@@ -75,8 +67,11 @@ const sketch = ({ width, height }) => {
     .data(stack(data))
     .enter()
     .append('path')
-    .attr('fill', (d, i) => colors[i])
-    .attr('d', areaGenerator());
+    .attr('fill', (d, i) => palette[i]);
+
+  function addAreaGenerator() {
+    g.selectAll('path').attr('d', areaGenerator);
+  }
 
   return {
     render({ exporting, width, height }) {
@@ -100,9 +95,7 @@ const sketch = ({ width, height }) => {
     },
     resize(props) {
       ({ width, height } = props);
-
-      g.selectAll('path')
-        .attr('d', areaGenerator());
+      addAreaGenerator();
     },
   };
 };
