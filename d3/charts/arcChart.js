@@ -16,7 +16,7 @@ const sketch = ({ width, height }) => {
 
   const palette = [
     ...random.pick(palettes).slice(0, 5),
-    ...random.pick(palettes).slice(0, 5)
+    ...random.pick(palettes).slice(0, 5),
   ];
 
   d3.select('head').append('style').text(/* css */ `
@@ -33,35 +33,24 @@ const sketch = ({ width, height }) => {
     .attr('height', height)
     .classed('svg', true);
 
-  const data = [23, 53, 23, 222, 54, 12, 67, 234];
-  const TWOPI = Math.PI * 2;
-  const startAngles = [0];
-  let dataSum;
+  const pieGenerator = d3
+    .pie()
+    .value((d) => d.value)
+    .sort(function (a, b) {
+      return a.sort.localeCompare(b.sort);
+    });
 
-  function getDataSum() {
-    dataSum = data.reduce((sum, val) => sum + val, 0)
-  }
-  getDataSum();
+  const data = [
+    { sort: 'n1', value: 23 },
+    { sort: 'n2', value: 53 },
+    { sort: 'n3', value: 23 },
+    { sort: 'n4', value: 222 },
+    { sort: 'n5', value: 54 },
+    { sort: 'n6', value: 12 },
+    { sort: 'n7', value: 67 },
+    { sort: 'n8', value: 234 },
+  ];
 
-  function getStartAngles() {
-    if (startAngles.length > 1) startAngles.length = 1;
-    data.reduce((sum, val) => {
-      const sm = sum + val;
-      startAngles.push(sm);
-      return sm;
-    }, 0);
-  }
-  getStartAngles();
-
-  const arcScale = d3
-    .scaleLinear()
-  
-  function setArcScale() {
-    arcScale
-    .domain([0, dataSum])
-    .range([0, TWOPI]);
-  }
-  setArcScale();
   const g = svg
     .append('g')
     .attr(
@@ -69,54 +58,52 @@ const sketch = ({ width, height }) => {
       `translate(${width / 2}, ${height / 2})`
     );
 
-  const arc = d3
-    .arc()
-    .innerRadius(100)
-    .outerRadius(250)
-    .padAngle(0.02)
-    .padRadius(250)
-    .cornerRadius(5)
+  function getArc() {
+    const arcGenerator = d3
+      .arc()
+      .innerRadius(100)
+      .outerRadius(200)
+      .padAngle(0.02)
+      .padRadius(200)
+      .cornerRadius(5);
 
-  function setStartEndAngle() {
-    arc
-    .startAngle((d, i) => arcScale(startAngles[i]))
-    .endAngle(
-      (d, i) => arcScale(startAngles[i]) + arcScale(d)
-    );
+    const arcData = pieGenerator(data);
+
+    g.selectAll('path').remove(); // onGui
+    g.selectAll('text').remove(); // onGui
+
+    g.selectAll('path')
+      .data(arcData)
+      .enter()
+      .append('path')
+      .attr('fill', 'red')
+      .attr('d', arcGenerator)
+      .attr('fill', (d, i) => palette[i]);
+    g.selectAll('text')
+      .data(arcData)
+      .enter()
+      .append('text')
+      .each(function (d, i) {
+        const centroid = arcGenerator.centroid(d);
+        d3.select(this)
+          .attr('x', centroid[0] - 5)
+          .attr('y', centroid[1] - 5)
+          .attr('dy', '13px')
+          .text(i);
+      });
   }
-  setStartEndAngle();
-
-  g.selectAll('path')
-    .data(data)
-    .enter()
-    .append('path')
-    .attr('d', arc)
-    // .attr('stroke-width', 3)
-    // .attr('stroke', 'white')
-    .attr('fill', (d, i) => palette[i]);
-
-  function guiChange() {
-    getDataSum(); // get new sum
-    getStartAngles(); // update angles
-    setStartEndAngle(); // update arc angles
-    setArcScale(); // set new domain
-
-    g
-      .selectAll('path')
-      .data(data)
-      .attr('d', arc)
-      // .enter()
-  }
+  getArc();
 
   getGui((gui) => {
-    gui .add(data, '0').min(10).max(300).step(1).onChange(guiChange);
-    gui .add(data, '1').min(10).max(300).step(1).onChange(guiChange);
-    gui .add(data, '2').min(10).max(300).step(1).onChange(guiChange);
-    gui .add(data, '3').min(10).max(300).step(1).onChange(guiChange);
-    gui .add(data, '4').min(10).max(300).step(1).onChange(guiChange);
-    gui .add(data, '5').min(10).max(300).step(1).onChange(guiChange);
-    gui .add(data, '6').min(10).max(300).step(1).onChange(guiChange);
-    gui .add(data, '7').min(10).max(300).step(1).onChange(guiChange);
+    for (let i = 0; i < data.length; i++) {
+      console.log(data[i]);
+      gui
+        .add(data[i], 'value')
+        .min(20)
+        .max(300)
+        .step(1)
+        .onChange(getArc);
+    }
   });
 
   return {
@@ -138,8 +125,6 @@ const sketch = ({ width, height }) => {
     },
     resize(props) {
       ({ width, height } = props);
-
-      // g.selectAll('path').attr('d', areaGenerator);
     },
   };
 };
