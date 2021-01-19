@@ -4,12 +4,7 @@ const settings = {
   animate: true
 };
 
-const sketch = () => {
-  let context;
-  let canvas;
-  let width;
-  let height;
-
+const sketch = ({ context, canvas, width, height}) => {
   let xPos = 0;
   let yPos = 0;
   let motionTrailLength = 10;
@@ -18,10 +13,10 @@ const sketch = () => {
   function storeLastPosition(xPos, yPos) {
     circles = [
       ...circles.slice(1),
-      new DrawCircle(xPos, yPos)
+      new Circle(xPos, yPos)
     ];
   }
-  class DrawCircle {
+  class Circle {
     constructor (x, y, r) {
       this.x = x;
       this.y = y;
@@ -63,16 +58,12 @@ const sketch = () => {
     yPos = e.changedTouches[0].clientY;
   }
    
+  canvas.addEventListener('mousemove', mouseMoveHandler)
+  canvas.addEventListener('touchmove', touchMoveHandler)
+
   return (props) => {
     ({height, width} = props);
 
-    if (!context) {
-      ({context, context: {canvas}} = props);
-
-      canvas.addEventListener('mousemove', mouseMoveHandler)
-      canvas.addEventListener('touchmove', touchMoveHandler)
-    }
-  
     styleRect();
  
     circles.forEach((circle, i) => {
@@ -91,7 +82,7 @@ const sketch = () => {
   
     storeLastPosition(xPos, yPos);
 
-    new DrawCircle(xPos, yPos).draw("source");
+    new Circle(xPos, yPos).draw("source");
   };
 };
 
