@@ -27,20 +27,11 @@ const sketch = ({ width, height }) => {
   const data = Array(10).fill('');
 
   const xScale = d3
-    .scaleLinear()
-    .domain([0, data.length])
-    .range([0, width]);
-  const yScale = d3
-    .scaleLinear()
-    .domain([0, data.length])
-    .range([0, height]);
-
-  const wScale = d3
     .scaleBand()
     .domain(data.map((el, i) => i))
     .range([0, width])
     .padding(0.03);
-  const hScale = d3
+  const yScale = d3
     .scaleBand()
     .domain(data.map((el, i) => i))
     .range([0, height])
@@ -61,8 +52,8 @@ const sketch = ({ width, height }) => {
     .append('rect')
     .attr('x', (d, i) => xScale(i))
     .attr('y', 0)
-    .attr('width', wScale.bandwidth())
-    .attr('height', hScale.bandwidth())
+    .attr('width', xScale.bandwidth())
+    .attr('height', yScale.bandwidth())
     .attr('fill', 'red');
 
   return ({ exporting, width, height }) => {
