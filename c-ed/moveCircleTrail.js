@@ -5,32 +5,28 @@ const settings = {
   animate: true
 };
 
-const sketch = () => {
-  let context, canvas, width, height;
-
+const sketch = ({ context, canvas, width, height }) => {
+  const motionTrailLength = 20;
   let xPos = 0;
   let yPos = 0;
-  let motionTrailLength = 20;
   let circles = [];
-
   class DrawCircle {
-    constructor (ratio, xPos, yPos) {
+    constructor (xPos, yPos) {
       this.x = xPos;
       this.y = yPos;
-      this.ratio = ratio;
     }
 
-    draw(ratio) {
+    draw(alpha) {
       let radius = 50;
 
-      if (ratio != 1) {
-        ratio /= 4;
-        radius = 220 * ratio;
+      if (alpha !== 1) {
+        alpha /= 4;
+        radius = 220 * alpha;
       };
 
       context.beginPath();
       context.arc(this.x, this.y, radius, 0, 2 * Math.PI, true);
-      context.fillStyle = "rgba(254, 231, 21, " + ratio + ")";
+      context.fillStyle = "rgba(254, 231, 21, " + alpha + ")";
       context.fill();
     }
   }
@@ -46,7 +42,7 @@ const sketch = () => {
   }
 
   function addCircle() {
-    let lastCircle = new DrawCircle(1, xPos, yPos);
+    let lastCircle = new DrawCircle(xPos, yPos);
     circles.push(lastCircle);
     lastCircle.draw(1)
   }
@@ -55,8 +51,8 @@ const sketch = () => {
   }
   function drawCircles() {
     circles.forEach((circle, i) => {
-      let ratio = (i + 1) / circles.length;
-      circle.draw(ratio)
+      let alpha = (i + 1) / circles.length;
+      circle.draw(alpha)
     })
   }
 
@@ -66,15 +62,11 @@ const sketch = () => {
     context.fillRect(0, 0, width, height);
   }
   
+  canvas.addEventListener('mousemove', mouseMoveHandler)
+  canvas.addEventListener('touchmove', touchMoveHandler)
+
   return (props) => {
     ({height, width} = props);
-    
-    if (!context) {
-      ({context, context: {canvas}} = props);
-
-      canvas.addEventListener('mousemove', mouseMoveHandler)
-      canvas.addEventListener('touchmove', touchMoveHandler)
-    }
     
     clearCanvas();
 
