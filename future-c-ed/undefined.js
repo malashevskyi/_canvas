@@ -19,8 +19,6 @@ const settings = {
   animate: true,
 };
 
-const names = [ 'HTML', 'CSS', 'JavaScript', 'Node', 'MySQL', 'Ajax', 'React', 'Webpack', 'Gulp', 'Photoshop', 'Figma', 'Canvas', 'GLSL', 'OpenGL', 'WebGL', 'Illustrator', 'GSAP', 'SVG', 'D3', 'Three.js' ]
-
 const sketch = ({ context, width, height }) => {
   const palette = random.pick(palettes);
   let tick = 0;
