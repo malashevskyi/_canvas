@@ -21,9 +21,9 @@ const settings = {
 const sketch = ({ context, width, height }) => {
   const palette = random.pick(palettes);
   let tick = 0;
-  const balls = [];
+  const numbs = [];
 
-  class Ball {
+  class Numb {
     constructor() {
       this.gaussian = random.gaussian(-0.2, 0.2) + 0.3;
       this.color = random.pick(palette);
@@ -66,8 +66,8 @@ const sketch = ({ context, width, height }) => {
     ({ width, height } = props);
     tick++;
 
-    if (balls.length < 50 && tick % 10 === 0) {
-      balls.push(new Ball());
+    if (numbs.length < 50 && tick % 10 === 0) {
+      numbs.push(new Numb());
     }
 
     context.fillStyle = 'white';
@@ -76,11 +76,11 @@ const sketch = ({ context, width, height }) => {
     context.save();
     context.translate(width / 2, height - 50);
 
-    balls.forEach((ball, i) => {
-      if (ball.tick > 300) {
-        ball.initial();
+    numbs.forEach((numb, i) => {
+      if (numb.tick > 300) {
+        numb.initial();
       }
-      ball.render();
+      numb.render();
     });
     context.restore();
   };
