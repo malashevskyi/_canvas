@@ -22,9 +22,9 @@ const settings = {
 const sketch = ({ context, width, height }) => {
   const palette = random.pick(palettes);
   let tick = 0;
-  const balls = [];
+  const texts = [];
 
-  class Ball {
+  class Text {
     constructor(angle, text) {
       this.angle = angle;
       this.color = random.pick(palette);
@@ -72,8 +72,8 @@ const sketch = ({ context, width, height }) => {
 
     tick++;
 
-    if (balls.length < 300 && tick % 40 === 0) {
-      balls.push(new Ball(random.pick(angles, tick % 10)));
+    if (texts.length < 300 && tick % 40 === 0) {
+      texts.push(new Text(random.pick(angles, tick % 10)));
     }
 
     context.fillStyle = 'white';
@@ -81,9 +81,9 @@ const sketch = ({ context, width, height }) => {
 
     context.save(); 
     context.translate(width / 2, height / 2);
-    balls.forEach((ball) => {
+    texts.forEach((ball) => {
       if (ball.tick > 300) {
-        balls.initial();
+        texts.initial();
       }
       ball.render();
     })
