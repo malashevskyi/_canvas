@@ -5,33 +5,34 @@ const settings = {
 };
 
 const sketch = ({ context, width, height }) => {
-  let tick = 0.338;
+  let tick = 0.3999;
+  let tickC = 0.0000001;
   
   return (props) => {
     ({ width, height } = props);
 
-    const maxSide = Math.max(width, height);
+    const radius = Math.max(width, height);
 
     context.fillStyle = "hsla(0, 0%, 0%, 1)";
     context.fillRect(0, 0, width, height);
     context.translate(width / 2, height / 2);
 
-    let radius;
-    for (let i = 0; i < 4000; i++) {
-      radius = 400 * Math.sin(i * Math.sin(tick));
-      context.fillStyle = `hsla(${ i + 12 }, 100%, 60%, 1)`;
-      context.fillStyle = '#fff';
+    for (let i = 0; i < 3000; i++) {
+      context.fillStyle = 'yellow';
       context.beginPath();
       context.rect(
-        Math.cos(i) * Math.sin(i * Math.sin(tick)) * maxSide,
-        Math.sin(i) * Math.sin(i * Math.sin(tick)) * maxSide,
+        Math.cos(i) * Math.sin(i / 2 * Math.sin(tick)) * radius,
+        Math.sin(i) * Math.sin(i / 2 * Math.sin(tick)) * radius,
         2,
         2
       )
       context.fill();
     }
 
-    tick += 0.000001;
+    tick += tickC;
+    if (tick > 0.4 || tick < 0.3999) {
+      tickC = -tickC;
+    }
   };
 };
 
