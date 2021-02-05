@@ -29,7 +29,7 @@ const sketch = ({ context, width, height, canvas }) => {
   const textCoordinates = context.getImageData(0, 0, 210, 50);
 
   class Particle {
-    constructor(x, y) {
+    constructor({ x, y }) {
       this.x = x;
       this.y = y;
       this.radius = 3;
@@ -88,11 +88,11 @@ const sketch = ({ context, width, height, canvas }) => {
     for (let y = 0; y < textCoordinates.height; y++) {
       for (let x = 0; x < textCoordinates.width; x++) {
         if (textCoordinates.data[i + 3] > 80) {
-          particles.push(new Particle(
-            Math.cos(i) * width + 210,
-            Math.sin(i) * width + 45,
-          ));
-          particlesTo.push(new Particle(x * 2, y * 2));
+          particles.push(new Particle({
+            x: Math.cos(i) * width + 210,
+            y: Math.sin(i) * width + 45,
+          } ));
+          particlesTo.push(new Particle({x: x * 2, y: y * 2}));
         }
         i += 4;
       }
@@ -100,15 +100,13 @@ const sketch = ({ context, width, height, canvas }) => {
   }
   init();
 
-  for (let i = 0; i < particles.length; i++) {
-    const rand = random.range(0, 3.5);
-
-    gsap.to(particles[i], {
+  particles.forEach((particle, i) => {
+    gsap.to(particle, {
       duration: 5,
       ...particlesTo[i],
-      delay: rand
+      delay: 'random(0, 3.5)'
     })
-  }
+  })
 
   let alpha = 0.2;
   let tick = 0;
