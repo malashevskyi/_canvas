@@ -1,1 +1,1 @@
-This is just a draft for [canvas-every-day](https://github.com/malashevskyi/canvas-every-day)
+This is just a draft for [canvas](https://github.com/malashevskyi/canvas)
