@@ -81,7 +81,7 @@ const sketch = ({ context, width, height, canvas }) => {
   }
 
   const particlesTo = [];
-
+  
   function init() {
     particles = [];
     let i = 0;
@@ -97,6 +97,7 @@ const sketch = ({ context, width, height, canvas }) => {
         i += 4;
       }
     }
+    console.log(particles);
   }
   init();
 
