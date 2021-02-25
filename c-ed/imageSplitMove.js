@@ -9,22 +9,11 @@ const settings = {
 
 const sketch = ({ context, width, height, canvas }) => {
 
-  let particles = [];
-
-  // const mouse = {
-  //   x: width / 2,
-  //   y: height / 2,
-  //   radius: 300,
-  // }
-
-  // canvas.addEventListener('mousemove', (event) => {
-  //   mouse.x = event.x;
-  //   mouse.y = event.y;
-  // })
-  let squaresCount = 30;
-  let squareWidth = 20;
-  let squareHeight = 20;
-  let screenRadius = Math.sqrt(width * width + height * height) / 2;
+  const particles = [];
+  const squaresCount = 30;
+  const squareWidth = 20;
+  const squareHeight = 20;
+  const screenRadius = Math.sqrt(width * width + height * height) / 2;
 
   class Particle {
     constructor({ uX, uY }) {
@@ -90,10 +79,6 @@ const sketch = ({ context, width, height, canvas }) => {
       }
     }
   }
-
-  // gsap.to(opt, { duration: 2, offset: 20, repeat: -1, yoyo: true, ease: 'power4.in' });
-
-  
 
   return (props) => {
     ({ width, height } = props);
